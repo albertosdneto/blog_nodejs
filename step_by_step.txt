@@ -1,0 +1,324 @@
+Useful for me because this is my first experience with node.
+
+0 - create empity folder for project
+
+1 - setup server
+npm init -y
+
+2 - Install dependencies
+npm i  express mongoose ejs
+expresse: server
+mongoose: database
+ejs: views
+
+3 -  install dev dependencies
+npm i --save-dev nodemon
+nodemon: allow to refresh the page every time we change the files
+
+4 - Create a script to run nodemon.
+Edit package.json
+  "scripts": {
+    "devStart": "nodemon server.js"
+  },
+Create file server.js
+On terminal test it:
+npm run devStart
+
+5 - Create server
+On server.js:
+
+//create server
+const express = require('express')
+//create app
+const app = express()
+
+// route setup for index
+app.get('/', (req, res) => {
+        res.send('Hello World!')
+    })
+    
+// app will be on port 5000
+app.listen(5000)
+
+6 - Make it print html do the view:
+
+const express = require('express')
+const app = express()
+
+//use ejs for view engine:
+app.set('view engine', 'ejs')
+
+app.get('/', (req, res) => {
+        res.send('Hello World!')
+    })
+
+app.listen(5000)
+
+7 - Create a new folder 'views' and inside it create a file 'index.ejs'
+8 - inside index.ejs create the html:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+</head>
+<body>
+    This is html.
+</body>
+</html>
+
+9 - back on server.js change res.send for res.render:
+
+const express = require('express')
+const app = express()
+
+//use ejs for view engine:
+app.set('view engine', 'ejs')
+
+app.get('/', (req, res) => {
+    res.render('index')
+})
+
+app.listen(5000)
+
+
+
+
+10 - Change index.ejs again adding h1 tag to text:
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+</head>
+
+<body>
+    <h1>
+        This is html.
+    </h1>
+</body>
+
+</html>
+
+11 - create a new folder 'routes' and inside it create a file(route) 'articles.js'
+At this file we put all the routes directly related to the articles
+
+12 - in order to use the routes on articles.js we must to setup express again. So inside articles.js:
+
+const express = require('express')
+const router = express.Router()
+
+// after the next step, if you go to http://localhost:5000/articles you will see
+//'In articles' text
+
+router.get('/', (req, res) => {
+    res.send('In articles')
+})
+
+// export the routes on this file
+module.exports = router
+
+13 - Go to server.js and require router:
+
+//create server
+const express = require('express')
+
+//require router fom articles.js
+const articleRouter = require('./routes/articles')
+const app = express()
+
+//use ejs for view engine:
+app.set('view engine', 'ejs')
+
+//use articleRouter
+app.use('/articles', articleRouter)
+
+app.get('/', (req, res) => {
+    res.render('index')
+})
+
+// app will be on port 5000
+app.listen(5000)
+
+14 - Finish the articles index page
+inside server.js, pass and object to the render: 
+
+
+//create server
+const express = require('express')
+
+//require router fom articles.js
+const articleRouter = require('./routes/articles')
+const app = express()
+
+//use ejs for view engine:
+app.set('view engine', 'ejs')
+
+//use articleRouter
+app.use('/articles', articleRouter)
+
+// pass "text" to the index page
+app.get('/', (req, res) => {
+    res.render('index', { text: 'hello' })
+})
+
+// app will be on port 5000
+app.listen(5000)
+
+Go to the index.ejs and use the variable 'text' passed to the render:
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+</head>
+
+<body>
+    <h1>
+        <%= text %>
+    </h1>
+</body>
+
+</html>
+
+Go to http://localhost:5000/ and see the output.
+
+
+15 - instead of using plain text let's use a variable, an array of articles, with the components of an actual article.
+At server.js:
+//create server
+const express = require('express')
+
+//require router fom articles.js
+const articleRouter = require('./routes/articles')
+const app = express()
+
+//use ejs for view engine:
+app.set('view engine', 'ejs')
+
+//use articleRouter
+app.use('/articles', articleRouter)
+
+// pass "articles" to the index page
+app.get('/', (req, res) => {
+    const articles = [{
+        title: 'Test Article',
+        createdAt: new Date(),
+        description: 'Test description'
+    }]
+    res.render('index', { articles: articles })
+})
+
+// app will be on port 5000
+app.listen(5000)
+
+At index.ejs:
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+</head>
+
+<body>
+    <h1>
+        <%= articles %>
+    </h1>
+</body>
+
+</html>
+
+16 - Now let's adjust the layout with bootstrap:
+
+index.ejs:
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <title>Blog</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="mb-4">Blog Articles</h1>
+        <a href="/articles/new" class="btn btn-success">New article</a>
+
+        <% articles.forEach(article => { %>
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h4 class="card-title">
+                        <%= article.title %>
+                    </h4>
+                    <div class="card-subtitle text-muted mb-2">
+                        <%=  article.createdAt.toLocaleDateString() %>
+                    </div>
+                    <div class="card-text mb-2">
+                        <%= article.description %>
+                    </div>
+                </div>
+            </div>
+            <% }) %>
+    </div>
+</body>
+
+</html>
+
+sever.js:
+//create server
+const express = require('express')
+
+//require router fom articles.js
+const articleRouter = require('./routes/articles')
+const app = express()
+
+//use ejs for view engine:
+app.set('view engine', 'ejs')
+
+//use articleRouter
+app.use('/articles', articleRouter)
+
+// pass "articles" to the index page
+app.get('/', (req, res) => {
+    const articles = [{
+            title: 'Test Article',
+            createdAt: new Date(),
+            description: 'Test description'
+        },
+        {
+            title: 'Test Article 2',
+            createdAt: new Date(),
+            description: 'Test description 2'
+        }
+    ]
+    res.render('index', { articles: articles })
+})
+
+// app will be on port 5000
+app.listen(5000)
+
+
+17 - Create New Article route
+
+
+
+
+
+
+
+
+
+
+

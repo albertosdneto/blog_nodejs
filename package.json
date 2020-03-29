@@ -1,0 +1,28 @@
+{
+    "name": "blog_nodejs",
+    "version": "1.0.0",
+    "description": "Implementing the tutorial from https://www.youtube.com/watch?v=1NrHkjlWVhM",
+    "main": "index.js",
+    "scripts": {
+        "devStart": "nodemon server.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/albertosdneto/blog_nodejs.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/albertosdneto/blog_nodejs/issues"
+    },
+    "homepage": "https://github.com/albertosdneto/blog_nodejs#readme",
+    "dependencies": {
+        "ejs": "^3.0.2",
+        "express": "^4.17.1",
+        "mongoose": "^5.9.6"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.2"
+    }
+}
